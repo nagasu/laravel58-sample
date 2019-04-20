@@ -1,4 +1,5 @@
-const mix = require('laravel-mix');
+const mix = require('laravel-mix')
+const webpackConfig = require('./webpack.config')
 
 /*
  |--------------------------------------------------------------------------
@@ -12,4 +13,28 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css');
+.sass('resources/sass/app.scss', 'public/css')
+.extract([
+    'axios',
+    'lodash',
+    'bootstrap',
+    'jquery'
+])
+
+mix.options({
+    polyfills: [
+        'Promise'
+    ]
+})
+
+if (mix.inProduction()) {
+    mix.version()
+} else {
+    mix.sourceMaps()
+    mix.browserSync({
+        proxy: process.env.APP_URL
+    })
+}
+
+mix.disableNotifications()
+
